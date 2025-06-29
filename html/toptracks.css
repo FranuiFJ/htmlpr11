@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(90deg,#000000 0% , #ff0000 100%);
+    background: linear-gradient(90deg,#000000 0% , #000000 100%);
     color: #ff0000;
 }
 header{
@@ -69,4 +69,19 @@ header{
     }
     a{
       color: #ffffff;
+    }
+
+    .login {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 999;
+    }
+
+    .login img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid rgb(255, 255, 255);
     }

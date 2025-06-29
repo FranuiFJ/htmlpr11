@@ -8,8 +8,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
     <link rel="icon" href="https://images.seeklogo.com/logo-png/25/2/patricio-rey-logo-png_seeklogo-255316.png">
 </head>
+
 <body>
+    <a href="file:///C:/Users/Usuario/Documents/html/html/juego.html" class="boton-juego">Juego!</a>
+
     <style>
+ .boton-juego {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: rgb(255, 0, 242);
+  color: white;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  z-index: 1000;
+  transition: background-color 0.2s;
+}
+
+.boton-juego:hover {
+  background-color: rgb(0, 67, 139);
+}
+
         .hero {
                     position: relative;
                     height: 800px;
@@ -29,6 +51,7 @@
                 }
         
                 .hero-text {
+                    font-family: 'Roboto Slab';
                     position: relative;
                     color: white;
                     z-index: 1;
@@ -46,7 +69,13 @@
                 
         
         </style>
-<header>
+<header class="header-container">
+    
+    <div class="login">
+    <a href="login.html" >
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZtL7UZwrxweALY-viWmPuCKpm6qnwh0jCwg&s" alt="link a otra página" width="50" height="50">
+    </a></div>
+
                 <h1>REDONDO Y DE RICOTA</h1>
                 <img src="https://images.seeklogo.com/logo-png/25/2/patricio-rey-logo-png_seeklogo-255316.png" alt="no cargo porque sos bobo" width="250" height="250"/>
 
@@ -56,7 +85,8 @@
                 <li><a href="file:///C:/Users/Usuario/Documents/html/html/htmlpr.html">HOME</a></li>
                 <li><a href="file:///C:/Users/Usuario/Documents/html/html/historiapr.html">HISTORIA</a></li>
                 <li><a href="file:///C:/Users/Usuario/Documents/html/html/albums.html">ALBUMS</a></li>
-                <li><a href="file:///C:/Users/Usuario/Documents/html/html/htmlpr.html">TOP TRACKS</a></li>
+                <li><a href="file:///C:/Users/Usuario/Documents/html/html/toptraks.html">TOP TRACKS</a></li>
+                <li><a href="file:///C:/Users/Usuario/Documents/html/html/fororicotero.html">FORO RICOTERO</a></li>
             </ul>
         </nav>
 </header>
@@ -79,4 +109,4 @@
 
 
 </body>
-</html>
+</html> 

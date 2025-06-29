@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscaminas Ricotero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
+  <header class="header-container">
+    
+    <div class="login">
+    <a href="login.html" >
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZtL7UZwrxweALY-viWmPuCKpm6qnwh0jCwg&s" alt="link a otra página" width="50" height="50">
+    </a></div>
+</header>
+  <style>
+      /*login*/
+    .login {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 999;
+    }
+
+    .login img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid rgb(255, 255, 255);
+    }
+    body {
+      font-family: 'Metal Mania', cursive;
+      background: url('https://www.diariocontexto.com.ar/wp-content/uploads/2018/09/los-redondos.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: white;
+    }
+
+    .fondo-oscuro {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      color: crimson;
+      text-shadow: 2px 2px black;
+    }
+
+    #tablero {
+      display: grid;
+      margin: 0 auto;
+      grid-template-columns: repeat(10, 40px);
+      gap: 4px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .celda {
+      width: 40px;
+      height: 40px;
+      background-color: #222;
+      border: 2px solid crimson;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .celda:hover {
+      background-color: crimson;
+    }
+
+    .revelada {
+      background-color: black;
+      cursor: default;
+    }
+
+    .mina {
+      background-color: crimson !important;
+    }
+
+    .bandera {
+      background-color: orange !important;
+    }
+
+    button, select {
+      font-family: 'Metal Mania';
+      background-color: crimson;
+      color: white;
+      padding: 10px 20px;
+      font-size: 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover, select:hover {
+      background-color: darkred;
+    }
+
+    #dificultad {
+      margin-right: 10px;
+    }
+      .volver-inicio {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: rgb(255, 0, 51);
+  color: white;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  z-index: 1000;
+  transition: background-color 0.2s;
+}
+
+.volver-inicio:hover {
+  background-color: darkred;
+}
+  </style>
+</head>
+<body>
+    <a href="htmlpr.html" class="volver-inicio">← Volver al inicio</a>
+  <div class="fondo-oscuro">
+    <h1>Buscaminas Ricotero</h1>
+    <div>
+      <select id="dificultad">
+        <option value="10">Principiante (10 minas)</option>
+        <option value="15">Medio Ricotero (15 minas)</option>
+        <option value="25">Redondo Extremo 💀 (25 minas)</option>
+      </select>
+      <button onclick="iniciarJuego()">Reiniciar</button>
+    </div>
+    <div id="tablero"></div>
+  </div>
+
+  <audio id="audioGanar" src="https://www.fesliyanstudios.com/play-mp3/387"></audio>
+  <audio id="audioPerder" src="https://www.fesliyanstudios.com/play-mp3/6675"></audio>
+
+  <script>
+    const filas = 10;
+    const columnas = 10;
+    let minasCantidad = 10;
+    let tablero = [];
+    let celdasReveladas = 0;
+
+    const audioGanar = document.getElementById("audioGanar");
+    const audioPerder = document.getElementById("audioPerder");
+
+    function iniciarJuego() {
+      const tableroDiv = document.getElementById("tablero");
+      tableroDiv.innerHTML = "";
+      tablero = [];
+      celdasReveladas = 0;
+      tableroDiv.style.pointerEvents = "auto";
+      minasCantidad = parseInt(document.getElementById("dificultad").value);
+
+      audioGanar.pause();
+      audioGanar.currentTime = 0;
+      audioPerder.pause();
+      audioPerder.currentTime = 0;
+
+      for (let f = 0; f < filas; f++) {
+        tablero[f] = [];
+        for (let c = 0; c < columnas; c++) {
+          tablero[f][c] = { mina: false, revelada: false, numero: 0, bandera: false };
+        }
+      }
+
+      let minasColocadas = 0;
+      while (minasColocadas < minasCantidad) {
+        const f = Math.floor(Math.random() * filas);
+        const c = Math.floor(Math.random() * columnas);
+        if (!tablero[f][c].mina) {
+          tablero[f][c].mina = true;
+          minasColocadas++;
+        }
+      }
+
+      for (let f = 0; f < filas; f++) {
+        for (let c = 0; c < columnas; c++) {
+          if (!tablero[f][c].mina) {
+            tablero[f][c].numero = contarMinasAlrededor(f, c);
+          }
+        }
+      }
+
+      for (let f = 0; f < filas; f++) {
+        for (let c = 0; c < columnas; c++) {
+          const celda = document.createElement("div");
+          celda.className = "celda";
+          celda.dataset.f = f;
+          celda.dataset.c = c;
+          celda.onclick = () => revelar(f, c, celda);
+          celda.oncontextmenu = (e) => {
+            e.preventDefault();
+            toggleBandera(f, c, celda);
+          };
+          tableroDiv.appendChild(celda);
+        }
+      }
+    }
+
+    function contarMinasAlrededor(f, c) {
+      let total = 0;
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          const nf = f + i;
+          const nc = c + j;
+          if (nf >= 0 && nf < filas && nc >= 0 && nc < columnas && tablero[nf][nc].mina) {
+            total++;
+          }
+        }
+      }
+      return total;
+    }
+
+    function toggleBandera(f, c, celdaHTML) {
+      const celda = tablero[f][c];
+      if (celda.revelada) return;
+      celda.bandera = !celda.bandera;
+      celdaHTML.classList.toggle("bandera", celda.bandera);
+      celdaHTML.innerText = celda.bandera ? "🚩" : "";
+    }
+
+    function revelar(f, c, celdaHTML) {
+      const celda = tablero[f][c];
+      if (celda.revelada || celda.bandera) return;
+      celda.revelada = true;
+      celdaHTML.classList.add("revelada");
+
+      if (celda.mina) {
+        celdaHTML.classList.add("mina");
+        celdaHTML.innerText = "💣";
+        audioPerder.play();
+        alert("¡Boom! Perdiste. Intentá otra vez, ricotero.");
+        document.getElementById("tablero").style.pointerEvents = "none";
+        return;
+      }
+
+      celdaHTML.innerText = celda.numero > 0 ? celda.numero : "";
+
+      celdasReveladas++;
+      if (celda.numero === 0) {
+        for (let i = -1; i <= 1; i++) {
+          for (let j = -1; j <= 1; j++) {
+            const nf = f + i;
+            const nc = c + j;
+            if (nf >= 0 && nf < filas && nc >= 0 && nc < columnas) {
+              const vecino = document.querySelector(`.celda[data-f="${nf}"][data-c="${nc}"]`);
+              if (vecino) revelar(nf, nc, vecino);
+            }
+          }
+        }
+      }
+
+      if (celdasReveladas === filas * columnas - minasCantidad) {
+        audioGanar.play();
+        alert("¡Ganaste, ricotero del alma!");
+        document.getElementById("tablero").style.pointerEvents = "none";
+      }
+    }
+
+    iniciarJuego();
+  </script>
+</body>
+</html>

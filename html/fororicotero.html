@@ -1,0 +1,363 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <link rel="icon" href="https://images.seeklogo.com/logo-png/25/2/patricio-rey-logo-png_seeklogo-255316.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foro Ricotero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Open+Sans&display=swap" rel="stylesheet">
+  <header class="header-container">
+    
+    <div class="login">
+    <a href="login.html" >
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZtL7UZwrxweALY-viWmPuCKpm6qnwh0jCwg&s" alt="link a otra página" width="50" height="50">
+    </a></div>
+  </header>
+  <style>
+    /*login*/
+    .login {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 999;
+    }
+    .login img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid rgb(255, 255, 255);
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://i.pinimg.com/originals/14/8b/aa/148baa92d05e907e1e707f08feb0b92c.jpg') center center / cover no-repeat fixed;
+      font-family: 'Metal Mania', cursive;
+      color: white;
+    }
+    .fondo {
+      background-color: rgba(0, 0, 0, 0.7);
+      min-height: 100vh;
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1, h2 {
+      text-align: center;
+      text-shadow: 2px 2px 5px black;
+    }
+    form, .form-respuesta {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px black;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      font-family: inherit;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background-color: crimson;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: darkred;
+    }
+    .comentario {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid crimson;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px black;
+      position: relative;
+    }
+    .nombre, .fecha, .texto {
+      font-family: 'Open Sans', sans-serif;
+    }
+    .nombre {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .fecha {
+      font-size: 0.8em;
+      color: #ccc;
+      margin-bottom: 5px;
+    }
+    .texto {
+      font-size: 16px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+    }
+    .borrar-btn img {
+      width: 35px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid crimson;
+      background-color: white;
+      padding: 3px;
+      transition: transform 0.2s ease;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    .borrar-btn img:hover {
+      transform: scale(1.1);
+    }
+    .borrar-btn, .responder-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    .respuestas {
+      margin-left: 20px;
+      margin-top: 10px;
+    }
+    .respuesta {
+     background-color: rgba(255,255,255,0.08);
+     border-left: 3px solid crimson;
+     padding: 10px;
+     border-radius: 6px;
+     margin-bottom: 10px;
+    }
+    .form-respuesta input, .form-respuesta textarea {
+      margin-top: 10px;
+    }
+    .comentario {
+      position: relative; 
+    }
+    .volver-inicio {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background-color: crimson;
+      color: white;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      z-index: 1000;
+      transition: background-color 0.2s;
+    }
+    .volver-inicio:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="fondo">
+    <h1>Bienvenido mi querido ricotero</h1>
+    <h2>Acá les damos un espacio para charlar sobre Los Redondos</h2>
+    <a href="htmlpr.html" class="volver-inicio">← Volver al inicio</a>
+
+    <form id="formComentario">
+      <input type="text" id="nombre" placeholder="Tu nombre" required>
+      <textarea id="texto" placeholder="Escribí tu comentario..." rows="4" required></textarea>
+      <button type="submit">Publicar comentario</button>
+    </form>
+
+    <div id="comentarios"></div>
+  </div>
+    
+
+  <script>
+    const form = document.getElementById('formComentario');
+    const comentariosDiv = document.getElementById('comentarios');
+
+    // Cargar o inicializar comentarios
+    let comentarios = JSON.parse(localStorage.getItem('comentarios'));
+
+    if (!comentarios || comentarios.length === 0) {
+  comentarios = [
+    {
+      nombre: "El Tano de Avellanedaa",
+      texto: "Yo los vi en Huracán, hermano... eso no se olvida más.",
+      fecha: "2014-09-20T19:45:00",
+      respuestas: [
+        {
+          nombre: "El Negro de Quilmes",
+          texto: "¡Alta noche esa! Llovía y nadie paraba de moverse, tremendo.",
+          fecha: "2014-09-20T22:15:00"
+        },
+        {
+          nombre: "Charly R.",
+          texto: "Hermano, ese pogo fue historia viva.",
+          fecha: "2014-09-21T01:32:00"
+        }
+      ]
+    },
+    
+    {
+      nombre: "El Colo",
+      texto: "Skay es el más grande, y el que diga que no, no entiende nada.",
+      fecha: "2019-11-03T18:15:00",
+      respuestas: [
+        {
+          nombre: "SkayLover",
+          texto: "Te banco a muerte, Colo.",
+          fecha: "2019-11-03T18:45:00"
+        },
+        {
+          nombre: "Indiero",
+          texto: "Skay crack, pero el Indio es el alma. ¡Los dos, locura total!",
+          fecha: "2019-11-04T00:20:00"
+        }
+      ]
+    }
+  ];
+      localStorage.setItem('comentarios', JSON.stringify(comentarios));
+    }
+
+    // Función que permite solo <a href="..."> seguro, elimina todo lo demás
+    function sanitizeHTML(str) {
+      const temp = document.createElement('div');
+      temp.innerHTML = str;
+
+      const elements = temp.querySelectorAll('*');
+
+      for (const el of elements) {
+        if (el.tagName.toLowerCase() !== 'a') {
+          const text = document.createTextNode(el.textContent);
+          el.parentNode.replaceChild(text, el);
+        } else {
+          const href = el.getAttribute('href');
+          if (!href || !href.match(/^https?:\/\//i)) {
+            const text = document.createTextNode(el.textContent);
+            el.parentNode.replaceChild(text, el);
+          } else {
+            el.setAttribute('target', '_blank');
+            el.setAttribute('rel', 'noopener noreferrer');
+          }
+        }
+      }
+      return temp.innerHTML;
+    }
+
+    function mostrarComentarios() {
+      // Ordenar por fecha más reciente primero
+      comentarios.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+      comentariosDiv.innerHTML = '';
+      comentarios.forEach((c, index) => {
+        const div = document.createElement('div');
+        div.className = 'comentario';
+        div.innerHTML = generarHTMLComentario(c, index);
+        comentariosDiv.appendChild(div);
+      });
+
+      // Botones borrar
+      document.querySelectorAll('.borrar-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const i = btn.getAttribute('data-index'); 
+          borrarComentario(i);
+        });
+      });
+
+      // Botones responder
+      document.querySelectorAll('.responder-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const i = btn.getAttribute('data-index');
+          mostrarFormularioRespuesta(i);
+        });
+      });
+    }
+
+    function generarHTMLComentario(c, index) {
+      let html = `
+        <div class="nombre">${sanitizeHTML(c.nombre)}</div>
+        <div class="fecha">${new Date(c.fecha).toLocaleDateString()} ${new Date(c.fecha).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+        <div class="texto">${sanitizeHTML(c.texto)}</div>
+        <button class="responder-btn" data-index="${index}">Responder</button>
+        <button class="borrar-btn" data-index="${index}">
+          <img src="https://w7.pngwing.com/pngs/298/507/png-transparent-rubbish-bins-waste-paper-baskets-computer-icons-recycling-bin-waste-rectangle-recycling-logo.png" alt="Borrar">
+        </button>
+        <div class="respuestas">
+      `;
+
+      if (c.respuestas && c.respuestas.length > 0) {
+        c.respuestas.forEach(r => {
+          html += `
+            <div class="respuesta">
+              <div class="nombre">${sanitizeHTML(r.nombre)}</div>
+              <div class="fecha">${new Date(r.fecha).toLocaleDateString()} ${new Date(r.fecha).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+              <div class="texto">${sanitizeHTML(r.texto)}</div>
+            </div>
+          `;
+        });
+      }
+
+      html += `</div><div class="form-respuesta" id="form-respuesta-${index}"></div>`;
+      return html;
+    }
+
+    function mostrarFormularioRespuesta(index) {
+      const container = document.getElementById(`form-respuesta-${index}`);
+      container.innerHTML = `
+        <input type="text" id="nombre-respuesta-${index}" placeholder="Tu nombre">
+        <textarea id="texto-respuesta-${index}" rows="2" placeholder="Tu respuesta..."></textarea>
+        <button onclick="enviarRespuesta(${index})">Enviar</button>
+      `;
+    }
+
+    function enviarRespuesta(index) {
+      const nombre = document.getElementById(`nombre-respuesta-${index}`).value.trim();
+      const texto = document.getElementById(`texto-respuesta-${index}`).value.trim();
+
+      if (nombre && texto) {
+        const respuesta = {
+          nombre,
+          texto,
+          fecha: new Date().toISOString()
+        };
+
+        comentarios[index].respuestas = comentarios[index].respuestas || [];
+        comentarios[index].respuestas.push(respuesta);
+        localStorage.setItem('comentarios', JSON.stringify(comentarios));
+        mostrarComentarios();
+      }
+    }
+
+    function borrarComentario(index) {
+      comentarios.splice(index, 1);
+      localStorage.setItem('comentarios', JSON.stringify(comentarios));
+      mostrarComentarios();
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const nombre = document.getElementById('nombre').value.trim();
+      const texto = document.getElementById('texto').value.trim();
+
+      if (nombre && texto) {
+        const nuevo = {
+          nombre,
+          texto,
+          fecha: new Date().toISOString(),
+          respuestas: []
+        };
+        comentarios.push(nuevo);
+        localStorage.setItem('comentarios', JSON.stringify(comentarios));
+        mostrarComentarios();
+        form.reset();
+      }
+    });
+
+    mostrarComentarios();
+  </script>
+</body>
+</html>
