@@ -137,8 +137,8 @@
     <h1>Buscaminas Ricotero</h1>
     <div>
       <select id="dificultad">
-        <option value="10">Principiante (10 minas)</option>
-        <option value="15">Medio Ricotero (15 minas)</option>
+        <option value="10">Noobsito 🤣 (10 minas)</option>
+        <option value="15">Medio Ricotero 👀 (15 minas)</option>
         <option value="25">Redondo Extremo 💀 (25 minas)</option>
       </select>
       <button onclick="iniciarJuego()">Reiniciar</button>
@@ -245,7 +245,7 @@
         celdaHTML.classList.add("mina");
         celdaHTML.innerText = "💣";
         audioPerder.play();
-        alert("¡Boom! Perdiste. Intentá otra vez, ricotero.");
+        alert("¡Bang Bang!.. estas liquidado, proba otra vez si te da.");
         document.getElementById("tablero").style.pointerEvents = "none";
         return;
       }
@@ -268,7 +268,7 @@
 
       if (celdasReveladas === filas * columnas - minasCantidad) {
         audioGanar.play();
-        alert("¡Ganaste, ricotero del alma!");
+        alert("¡Ganaste!, vos si sos un ricotero del alma!");
         document.getElementById("tablero").style.pointerEvents = "none";
       }
     }
